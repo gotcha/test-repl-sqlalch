@@ -4,7 +4,6 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, String
 import fire
 
-
 Base = declarative_base()
 
 
@@ -15,7 +14,7 @@ class User(Base):
     name = Column(String)
 
     def __repr__(self):
-        return "<User(name='%s')>" % self.name
+        return "<User(id='%s', name='%s')>" % (self.id, self.name)
 
 
 def create_database():
@@ -23,20 +22,20 @@ def create_database():
     Base.metadata.create_all(engine)
 
 
-def create_user():
+def create_user(name='gotcha'):
     engine = create_engine('sqlite:///users.db')
     Session = sessionmaker(bind=engine)
     session = Session()
-    me = User(name='gotcha')
+    me = User(name=name)
     session.add(me)
     session.commit()
 
 
-def query_user():
+def query_user(name='gotcha'):
     engine = create_engine('sqlite:///users.db')
     Session = sessionmaker(bind=engine)
     session = Session()
-    print(session.query(User).filter_by(name='gotcha').first())
+    print(session.query(User).filter_by(name=name).all())
 
 
 if __name__ == '__main__':
